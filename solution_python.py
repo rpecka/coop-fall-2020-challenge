@@ -5,8 +5,10 @@ class EventSourcer():
         self.value = 0
 
         # Store a list of changes that have been made. Apply a change by adding the values in this array,
-        # Revert a change by subtracting it
+        # revert a change by subtracting it
         self._event_stack = []
+        # Keep track of where we are in the list of events. Start at -1 so that we don't have to store a
+        # useless value at index 0 when we have made no changes
         self._event_index = -1
 
     def add(self, num: int):
@@ -25,13 +27,13 @@ class EventSourcer():
             self._event_stack.append(num)
 
     def undo(self):
-        if self._event_index < 0:
+        if self._event_index < 0:  # Check that we have something to undo
             return
         self.value -= self._event_stack[self._event_index]
         self._event_index -= 1
 
     def redo(self):
-        if self._event_index >= len(self._event_stack) - 1:
+        if self._event_index >= len(self._event_stack) - 1:  # Check that we have something to redo
             return
         self._event_index += 1
         self.value += self._event_stack[self._event_index]
@@ -39,7 +41,7 @@ class EventSourcer():
     def bulk_undo(self, steps: int):
         if steps < 0:
             return
-        if self._event_index - steps < -1:
+        if self._event_index - steps < -1:  # Check if we are trying to undo more than we can
             remaining_steps = self._event_index + 1
         else:
             remaining_steps = steps
@@ -51,7 +53,7 @@ class EventSourcer():
     def bulk_redo(self, steps: int):
         if steps < 0:
             return
-        if self._event_index + steps >= len(self._event_stack):
+        if self._event_index + steps >= len(self._event_stack):  # Check if we are trying to redo more than we can
             remaining_steps = len(self._event_stack) - self._event_index - 1
         else:
             remaining_steps = steps
