@@ -41,7 +41,7 @@ def test_redo():
     sourcer.add(1)
     sourcer.redo()
 
-    assert sourcer.value == 6
+    assert sourcer.value == 11
 
 def test_bulk_undo():
     sourcer = EventSourcer()
@@ -109,6 +109,7 @@ def test_bulk_redo_overstep():
     sourcer.undo()
     sourcer.undo()
     sourcer.undo()
+    assert sourcer.value == 10
     sourcer.bulk_redo(5)
 
     assert sourcer.value == 25
