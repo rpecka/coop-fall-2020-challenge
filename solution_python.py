@@ -8,13 +8,19 @@ class EventSourcer():
 
     def add(self, num: int):
         self.value += num
-        self._event_stack.append(num)
         self._event_index += 1
+        if self._event_index < len(self._event_stack):
+            self._event_stack[self._event_index] = num
+        else:
+            self._event_stack.append(num)
 
     def subtract(self, num: int):
         self.value -= num
-        self._event_stack.append(num * -1)
         self._event_index += 1
+        if self._event_index < len(self._event_stack):
+            self._event_stack[self._event_index] = num * -1
+        else:
+            self._event_stack.append(num * -1)
 
     def undo(self):
         if self._event_index < 0:
