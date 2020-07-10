@@ -113,3 +113,37 @@ def test_bulk_redo_overstep():
     sourcer.bulk_redo(5)
 
     assert sourcer.value == 25
+
+def test_bulk_undo_no_actions():
+    sourcer = EventSourcer()
+
+    sourcer.bulk_undo(1)
+    assert sourcer.value == 0
+
+    sourcer.bulk_undo(500)
+    assert sourcer.value == 0
+
+def test_bulk_redo_with_no_redo_step():
+    sourcer = EventSourcer()
+
+    sourcer.bulk_redo(1)
+    assert sourcer.value == 0
+
+    sourcer.bulk_redo(500)
+    assert sourcer.value == 0
+
+def test_invalid_undo_steps():
+    sourcer = EventSourcer()
+
+    sourcer.add(5)
+    sourcer.bulk_undo(-1)
+    assert sourcer.value == 5
+
+def test_invalid_redo_steps():
+    sourcer = EventSourcer()
+
+    sourcer.add(5)
+    sourcer.add(5)
+    sourcer.undo()
+    sourcer.bulk_redo(-1)
+    assert sourcer.value == 5
