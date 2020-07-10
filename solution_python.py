@@ -5,7 +5,7 @@ class EventSourcer():
         self.value = 0
 
         # Store a list of changes that have been made. Apply a change by adding the values in this array,
-        # revert a change by subtracting it
+        # revert a change by subtracting them
         self._event_list = []
 
         # Keep track of where we are in the list of events. Start at -1 so that we don't have to store a
