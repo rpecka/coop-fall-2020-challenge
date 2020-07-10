@@ -147,3 +147,25 @@ def test_invalid_redo_steps():
     sourcer.undo()
     sourcer.bulk_redo(-1)
     assert sourcer.value == 5
+
+def test_commit_undo_retain_value():
+    sourcer = EventSourcer()
+
+    sourcer.add(5)
+    sourcer.commit()
+    assert sourcer.value == 5
+
+    sourcer.undo()
+    assert sourcer.value == 5
+
+def test_commit_redo_retain_value():
+    sourcer = EventSourcer()
+
+    sourcer.add(5)
+    sourcer.add(5)
+    sourcer.undo()
+    sourcer.commit()
+    assert sourcer.value == 5
+
+    sourcer.redo()
+    assert sourcer.value == 5

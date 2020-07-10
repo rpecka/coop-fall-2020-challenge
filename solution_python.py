@@ -1,5 +1,5 @@
 class EventSourcer():
-    # Do not change the signature of any functions
+    _START_INDEX = -1
 
     def __init__(self):
         self.value = 0
@@ -11,7 +11,7 @@ class EventSourcer():
         # Keep track of where we are in the list of events. Start at -1 so that we don't have to store a
         # useless value at index 0 when we have made no changes. A value of -1 indicates that we are at the original
         # value
-        self._event_index = -1
+        self._event_index = EventSourcer._START_INDEX
 
     def add(self, num: int):
         self._push_event(num)
@@ -31,6 +31,7 @@ class EventSourcer():
     def undo(self):
         if self._event_index < 0:  # Check that we have something to undo
             return
+
         # Revert the current event and then move to the previous one
         self.value -= self._event_list[self._event_index]
         self._event_index -= 1
@@ -38,6 +39,7 @@ class EventSourcer():
     def redo(self):
         if self._event_index >= len(self._event_list) - 1:  # Check that we have something to redo
             return
+
         # Move to the next event and apply it
         self._event_index += 1
         self.value += self._event_list[self._event_index]
@@ -71,3 +73,8 @@ class EventSourcer():
             self._event_index += 1
             self.value += self._event_list[self._event_index]
             remaining_steps -= 1
+
+    # Erase all history and start from scratch at the current value
+    def commit(self):
+        self._event_list = []
+        self._event_index = EventSourcer._START_INDEX
